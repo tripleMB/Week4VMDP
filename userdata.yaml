@@ -1,0 +1,16 @@
+#cloud-config
+packages:
+  - wget
+  - ntpdate
+
+users:
+  - name: webuser
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: sudo
+    shell: /bin/bash
+    lock_passwd: false
+    ssh_authorized_keys:
+      - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL8VdzZRP8ND1il7l+OshonyuptQloKQMrhjS7f67lun"
+
+
+

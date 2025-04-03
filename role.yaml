@@ -1,0 +1,11 @@
+- name: webserver setup
+  hosts: webservers
+  become: yes
+  roles:
+    - webserver
+
+- name: database server setup 
+  hosts: database
+  become: yes
+  roles:
+    - database

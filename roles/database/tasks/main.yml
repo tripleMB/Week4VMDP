@@ -1,0 +1,75 @@
+# SPDX-License-Identifier: MIT-0
+---
+# tasks file for roles/database
+
+- name: Installeer system packages
+  apt:
+    name:
+      - python3-pip
+      - python3-venv
+    state: present
+  become: yes
+
+- name: Installeer MySQL Python package
+  pip:
+    name: pymysql
+    state: present
+    extra_args: --break-system-packages
+    executable: pip3
+  become: yes
+
+- name: Update apt repository
+  apt:
+    update_cache: yes
+  become: yes
+
+- name: Stel MySQL root wachtwoord in vóór installatie
+  debconf:
+    name: mysql-server
+    question: mysql-server/root_password
+    value: "Welkom01!"
+    vtype: password
+  become: yes
+
+- name: Bevestig root wachtwoord tijdens installatie
+  debconf:
+    name: mysql-server
+    question: mysql-server/root_password_again
+    value: "Welkom01!"
+    vtype: password
+  become: yes
+
+- name: Installeer MySQL server
+  apt:
+    name: mysql-server
+    state: present
+  become: yes
+
+- name: Start en enable MySQL
+  service:
+    name: mysql
+    state: started
+    enabled: yes
+  become: yes
+
+- name: Wijzig root authenticatie naar wachtwoord-gebaseerde login
+  mysql_user:
+    name: root
+    host: localhost
+    password: "Welkom01!"
+    priv: "*.*:ALL,GRANT"
+    state: present
+    login_unix_socket: true
+  become: yes
+
+- name: Maak database user aan
+  mysql_user:
+    login_user: root
+    login_password: "Welkom01!"
+    login_host: "127.0.0.1"
+    name: dbuser
+    password: "dbpassword"
+    priv: '*.*:ALL'
+    host: '%'
+    state: present
+  become: yes

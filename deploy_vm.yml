@@ -1,0 +1,11 @@
+- hosts: webserver
+  become: true
+  roles:
+    - apache
+    - php
+    - php-mysql
+
+- hosts: dbserver
+  become: true
+  roles:
+    - mysql
